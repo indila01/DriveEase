@@ -1,3 +1,6 @@
 ﻿namespace DriveEase.Application.Actions.Cars;
-public sealed record class GetCarCommand(string Email, string Name, string Description);
 
+/// <summary>
+/// command record
+/// </summary>
+public sealed record GetCarCommand(string Email, string Name, string Description);

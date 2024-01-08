@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace DriveEase.Persistance;
-internal class DriveEaseDbContext
+
+/// <summary>
+/// db context
+/// </summary>
+public class DriveEaseDbContext : DbContext
 {
 }

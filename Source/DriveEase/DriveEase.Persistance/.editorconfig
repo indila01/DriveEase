@@ -23,3 +23,12 @@ dotnet_diagnostic.S1128.severity = Error
 
 # SA1200: Using directives should be placed correctly
 dotnet_diagnostic.SA1200.severity = none
+
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
+
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = none
+
+# CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+dotnet_diagnostic.CS8618.severity = silent

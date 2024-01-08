@@ -17,7 +17,7 @@ namespace DriveEase.API.Controllers
         [Route("/cars")]
         public async Task<IActionResult> GetCars()
         {
-            return Ok(config.Test);
+            return Ok();
         }
     }
 }

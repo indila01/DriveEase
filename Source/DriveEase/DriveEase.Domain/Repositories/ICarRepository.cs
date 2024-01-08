@@ -1,7 +1,10 @@
 ﻿using DriveEase.Domain.Entities;
+
 namespace DriveEase.Domain.Repositories;
 
-public interface ICarRepository
+/// <summary>
+/// car repository.
+/// </summary>
+public interface ICarRepository : IGenericRepository<Car>
 {
-    Task<Car?> GetByIdAsyn(Guid id, CancellationToken cancellationToken = default);
 }

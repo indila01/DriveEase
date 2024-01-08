@@ -1,3 +1,5 @@
+using DriveEase.API.Middleware;
+using DriveEase.Persistance;
 using DriveEase.SharedKernel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +15,11 @@ var config = builder.Configuration
     //    x.ConfigureKeyVault();
     //})
     .AddUserSecrets<Program>(optional: true).Build();
-// register services for each layer
 
-//options pattern
+// register services for each layer
+builder.Services.RegisterPersistenceServices(config);
+
+// options pattern
 builder.Services.Configure<ApplicationConfig>(
     builder.Configuration.GetSection(nameof(ApplicationConfig)));
 
@@ -26,11 +30,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-//builder.Register();
-
 var app = builder.Build();
 
-//add global exception middleware
+app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -46,10 +48,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("DefaultAnyOriginPolicy");
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
-
-
 app.Run();
