@@ -1,4 +1,5 @@
-﻿using DriveEase.Application.Actions.Cars;
+﻿using DriveEase.API.Extensions;
+using DriveEase.Application.Actions.Cars.Get;
 using FastEndpoints;
 using MediatR;
 
@@ -8,7 +9,7 @@ namespace DriveEase.API.Endpoints.Car;
 /// get cars endpoint
 /// </summary>
 /// <seealso cref="FastEndpoints.Endpoint&lt;DriveEase.API.Endpoints.Car.GetCarRequest, DriveEase.API.Endpoints.Car.GetCarResponse&gt;" />
-public class GetCar : Endpoint<GetCarRequest, GetCarResponse>
+public class GetCar : Endpoint<GetCarRequest, IResult>
 {
     /// <summary>
     /// The mediator
@@ -24,28 +25,18 @@ public class GetCar : Endpoint<GetCarRequest, GetCarResponse>
         this.mediator = mediator;
     }
 
-    /// <summary>
-    /// use this method to configure how the endpoint should be listening to incoming requests.
-    /// <para>HINT: it is only called once during endpoint auto registration during app startup.</para>
-    /// </summary>
+    /// <inheritdoc/>
     public override void Configure()
     {
         this.Get(GetCarRequest.Route);
         this.AllowAnonymous();
     }
 
-    /// <summary>
-    /// the handler method for the endpoint. this method is called for each request received.
-    /// </summary>
-    /// <param name="req">the request dto</param>
-    /// <param name="ct">a cancellation token</param>
-    /// <returns></returns>
-    public override async Task HandleAsync(GetCarRequest req, CancellationToken ct)
+    /// <inheritdoc/>
+    public override async Task<IResult> ExecuteAsync(GetCarRequest req, CancellationToken ct)
     {
-        var result = await this.mediator.Send(new GetCarCommand(req.Model));
+        var result = await this.mediator.Send(new GetCarCommand(req.model));
 
-        Response = new();
-
-
+        return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
     }
 }

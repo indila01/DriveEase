@@ -1,4 +1,5 @@
 ﻿namespace DriveEase.SharedKernel.Primitives;
+
 /// <summary>
 /// Represents the base class all value objects derive from.
 /// </summary>

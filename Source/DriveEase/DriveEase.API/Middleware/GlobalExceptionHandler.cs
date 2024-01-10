@@ -1,6 +1,7 @@
 ﻿using DriveEase.API.Model;
 using DriveEase.SharedKernel;
 using DriveEase.SharedKernel.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net;
@@ -8,15 +9,10 @@ using System.Net;
 namespace DriveEase.API.Middleware;
 
 /// <summary>
-/// Global exception handler
+/// Global exception handler.
 /// </summary>
-public class GlobalExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
-    /// <summary>
-    /// The next
-    /// </summary>
-    private readonly RequestDelegate next;
-
     /// <summary>
     /// The logger
     /// </summary>
@@ -30,44 +26,37 @@ public class GlobalExceptionHandler
     /// <summary>
     /// Initializes a new instance of the <see cref="GlobalExceptionHandler"/> class.
     /// </summary>
-    /// <param name="next">The next.</param>
     /// <param name="logger">The logger.</param>
-    public GlobalExceptionHandler(RequestDelegate next, ILogger<GlobalExceptionHandler> logger, IOptionsSnapshot<ApplicationConfig> appSettings)
+    /// <param name="appSettings">The application settings.</param>
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IOptionsSnapshot<ApplicationConfig> appSettings)
     {
-        this.next = next;
         this.logger = logger;
         this.includeExceptionDetailsInResponse = appSettings.Value.IncludeExceptionDetailsInResponse;
     }
 
     /// <summary>
-    /// Invokes the asynchronous.
+    /// Tries to handle the specified exception asynchronously within the ASP.NET Core pipeline.
+    /// Implementations of this method can provide custom exception-handling logic for different scenarios.
     /// </summary>
-    /// <param name="httpContext">The HTTP context.</param>
-    /// <returns>exception</returns>
-    public async Task InvokeAsync(HttpContext httpContext)
+    /// <param name="httpContext">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> for the request.</param>
+    /// <param name="exception">The unhandled exception.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task that represents the asynchronous read operation. The value of its <see cref="P:System.Threading.Tasks.ValueTask`1.Result" />
+    /// property contains the result of the handling operation.
+    /// <see langword="true" /> if the exception was handled successfully; otherwise <see langword="false" />.
+    /// </returns>
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken)
     {
-        try
-        {
-            await this.next(httpContext);
-        }
-        catch (Exception ex)
-        {
-            await this.HandleExceptionAsync(httpContext, ex);
-        }
-    }
+        logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
-    /// <summary>
-    /// Handles the exception asynchronous.
-    /// </summary>
-    /// <param name="httpContext">The HTTP context.</param>
-    /// <param name="ex">The ex.</param>
-    /// <returns>exception</returns>
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
-    {
-        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+        var statusCode = StatusCodes.Status500InternalServerError;
         CustomProblemDetails problem = new();
 
-        switch (ex)
+        switch (exception)
         {
             //case BadRequestException badRequestException:
             //    statusCode = HttpStatusCode.BadRequest;
@@ -81,7 +70,7 @@ public class GlobalExceptionHandler
             //    };
             //    break;
             case NotFoundException NotFound:
-                statusCode = HttpStatusCode.NotFound;
+                statusCode = StatusCodes.Status404NotFound;
                 problem = new CustomProblemDetails
                 {
                     Title = NotFound.Message,
@@ -93,17 +82,19 @@ public class GlobalExceptionHandler
             default:
                 problem = new CustomProblemDetails
                 {
-                    Title = ex.Message,
+                    Title = exception.Message,
                     Status = (int)statusCode,
                     Type = nameof(HttpStatusCode.InternalServerError),
-                    Detail = this.includeExceptionDetailsInResponse ? ex.StackTrace : string.Empty,
+                    Detail = this.includeExceptionDetailsInResponse ? exception.StackTrace : string.Empty,
                 };
                 break;
         }
 
-        httpContext.Response.StatusCode = (int)statusCode;
+        httpContext.Response.StatusCode = problem.Status.Value;
         var logMessage = JsonConvert.SerializeObject(problem);
         this.logger.LogError(logMessage);
-        await httpContext.Response.WriteAsJsonAsync(problem);
+        await httpContext.Response.WriteAsJsonAsync(problem, cancellationToken);
+
+        return true;
     }
 }

@@ -15,19 +15,19 @@ public class Car : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// <param name="model">The model.</param>
     /// <param name="status">The status.</param>
     /// <param name="createdBy">The created by.</param>
-    private Car(string make, string model, string status, string createdBy)
+    private Car(string make, string model)
         : base(Guid.NewGuid())
     {
         Ensure.NotEmpty(make, "The make is required", nameof(make));
         Ensure.NotEmpty(model, "The model is required", nameof(model));
-        Ensure.NotEmpty(status, "The status is required", nameof(status));
-        Ensure.NotEmpty(createdBy, "The createdBy is required", nameof(createdBy));
+        //Ensure.NotEmpty(status, "The status is required", nameof(status));
+        //Ensure.NotEmpty(createdBy, "The createdBy is required", nameof(createdBy));
 
         this.Make = make;
         this.Model = model;
-        this.Status = status;
+        //this.Status = status;
         this.CreatedDate = DateTime.UtcNow;
-        this.CreatedBy = createdBy;
+        //this.CreatedBy = createdBy;
     }
 
     /// <summary>
@@ -87,9 +87,9 @@ public class Car : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// <param name="status">The status.</param>
     /// <param name="createdBy">The created by.</param>
     /// <returns>Car.</returns>
-    public static Car Create(string make, string model, string status, string createdBy)
+    public static Car Create(string make, string model)
     {
         // add domainevent
-        return new Car(make, model, status, createdBy);
+        return new Car(make, model);
     }
 }

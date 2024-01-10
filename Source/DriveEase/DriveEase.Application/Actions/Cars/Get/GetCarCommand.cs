@@ -1,7 +1,7 @@
 ﻿using DriveEase.SharedKernel.Primitives.Result;
 using MediatR;
 
-namespace DriveEase.Application.Actions.Cars;
+namespace DriveEase.Application.Actions.Cars.Get;
 
 /// <summary>
 /// command 

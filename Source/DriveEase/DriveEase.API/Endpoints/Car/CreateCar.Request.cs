@@ -1,9 +1,6 @@
 ﻿namespace DriveEase.API.Endpoints.Car;
 
-/// <summary>
-/// get car request
-/// </summary>
-public record GetCarRequest(string model)
+public record CreateCarRequest(string make, string model)
 {
     /// <summary>
     /// The route

@@ -3,12 +3,12 @@ using DriveEase.Domain.Repositories;
 using DriveEase.SharedKernel.Primitives.Result;
 using MediatR;
 
-namespace DriveEase.Application.Actions.Cars;
+namespace DriveEase.Application.Actions.Cars.Get;
 
 /// <summary>
 /// get car handler
 /// </summary>
-/// <seealso cref="MediatR.IRequestHandler&lt;DriveEase.Application.Actions.Cars.GetCarCommand, DriveEase.SharedKernel.Primitives.Result.Result&lt;DriveEase.Application.Actions.Cars.CarDto&gt;&gt;" />
+/// <seealso cref="IRequestHandler&lt;GetCarCommand, Result&lt;CarDto&gt;&gt;" />
 public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarDto>>
 {
     /// <summary>
@@ -37,7 +37,7 @@ public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarDto
     /// </returns>
     public async Task<Result<CarDto>> Handle(GetCarCommand request, CancellationToken cancellationToken)
     {
-        var result = await this.carRepository.GetCarByModelAsync(request.model);
+        var result = await carRepository.GetCarByModelAsync(request.model);
 
         if (result is null)
         {
@@ -47,6 +47,7 @@ public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarDto
         return Result.Success<CarDto>(
             new(
                 result.Id,
-                result.Make));
+                result.Make,
+                result.Model));
     }
 }

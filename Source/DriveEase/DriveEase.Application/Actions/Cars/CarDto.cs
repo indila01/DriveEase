@@ -3,4 +3,4 @@
 /// <summary>
 /// car dto
 /// </summary>
-public record CarDto(Guid id, string make);
+public record CarDto(Guid id, string make, string model);
