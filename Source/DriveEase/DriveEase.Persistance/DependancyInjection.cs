@@ -1,6 +1,8 @@
-﻿using DriveEase.Domain.Repositories;
-using DriveEase.Persistance.Repositories;
+﻿using DriveEase.Domain.Abstraction;
+using DriveEase.Domain.Repositories;
+using DriveEase.Persistance.EFCustomizations;
 using DriveEase.SharedKernel;
+using DriveEase.SharedKernel.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,14 +25,18 @@ public static class DependancyInjection
         IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString(Connectionstring.DriveEaseDbConnectionKey);
+        Ensure.NotEmpty(connectionString, "DbConnection string is empty", nameof(connectionString));
+
         services.AddDbContext<DriveEaseDbContext>(options =>
         {
             options.UseSqlServer(connectionString);
         });
 
         // register repositories
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<DriveEaseDbContext>());
         services.AddScoped<ICarRepository, CarRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

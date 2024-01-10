@@ -1,6 +1,9 @@
-﻿namespace DriveEase.Application.Actions.Cars;
+﻿using DriveEase.SharedKernel.Primitives.Result;
+using MediatR;
+
+namespace DriveEase.Application.Actions.Cars;
 
 /// <summary>
-/// command record
+/// command 
 /// </summary>
-public sealed record GetCarCommand(string Email, string Name, string Description);
+public record GetCarCommand(string model) : IRequest<Result<CarDto>>;

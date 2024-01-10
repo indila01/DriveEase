@@ -44,6 +44,20 @@ public static class DomainErrors
     }
 
     /// <summary>
+    ///  Contains the car errors.
+    /// </summary>
+    public static class Car
+    {
+        /// <summary>
+        /// Gets the not found.
+        /// </summary>
+        /// <value>
+        /// The not found.
+        /// </value>
+        public static Error NotFound => new Error("Car.NotFound", "The car with the specified identifier was not found.");
+    }
+
+    /// <summary>
     /// Contains the attendee errors.
     /// </summary>
     public static class Attendee
