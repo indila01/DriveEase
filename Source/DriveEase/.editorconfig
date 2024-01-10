@@ -52,6 +52,9 @@ dotnet_diagnostic.CS8602.severity = silent
 # S2259: Null pointers should not be dereferenced
 dotnet_diagnostic.S2259.severity = silent
 
+# SA1208: System using directives should be placed before other using directives
+dotnet_diagnostic.SA1208.severity = silent
+
 [*.{cs,vb}]
 #### Naming styles ####
 

@@ -8,8 +8,8 @@ namespace DriveEase.Application.Actions.Cars.Get;
 /// <summary>
 /// get car handler
 /// </summary>
-/// <seealso cref="IRequestHandler&lt;GetCarCommand, Result&lt;CarDto&gt;&gt;" />
-public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarDto>>
+/// <seealso cref="IRequestHandler&lt;GetCarCommand, Result&lt;CarResponse&gt;&gt;" />
+public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarResponse>>
 {
     /// <summary>
     /// The car repository
@@ -35,16 +35,16 @@ public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarDto
     /// <returns>
     /// Response from the request.
     /// </returns>
-    public async Task<Result<CarDto>> Handle(GetCarCommand request, CancellationToken cancellationToken)
+    public async Task<Result<CarResponse>> Handle(GetCarCommand request, CancellationToken cancellationToken)
     {
         var result = await carRepository.GetCarByModelAsync(request.model);
 
         if (result is null)
         {
-            return Result.Failure<CarDto>(DomainErrors.Car.NotFound);
+            return Result.Failure<CarResponse>(DomainErrors.Car.NotFound);
         }
 
-        return Result.Success<CarDto>(
+        return Result.Success<CarResponse>(
             new(
                 result.Id,
                 result.Make,

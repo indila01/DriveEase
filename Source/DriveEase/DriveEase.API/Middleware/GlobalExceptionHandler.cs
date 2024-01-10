@@ -51,7 +51,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
+        this.logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
         var statusCode = StatusCodes.Status500InternalServerError;
         CustomProblemDetails problem = new();
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 problem = new CustomProblemDetails
                 {
                     Title = NotFound.Message,
-                    Status = (int)statusCode,
+                    Status = statusCode,
                     Type = nameof(NotFoundException),
                     Detail = this.includeExceptionDetailsInResponse ? NotFound.InnerException?.Message : string.Empty,
                 };
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 problem = new CustomProblemDetails
                 {
                     Title = exception.Message,
-                    Status = (int)statusCode,
+                    Status = statusCode,
                     Type = nameof(HttpStatusCode.InternalServerError),
                     Detail = this.includeExceptionDetailsInResponse ? exception.StackTrace : string.Empty,
                 };

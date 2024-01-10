@@ -1,14 +1,16 @@
 ﻿using DriveEase.API.Extensions;
+using DriveEase.API.Model;
 using DriveEase.Application.Actions.Cars.Create;
 using DriveEase.SharedKernel;
 using FastEndpoints;
 using MediatR;
 using Microsoft.Extensions.Options;
+using System.Net.Mime;
 
 namespace DriveEase.API.Endpoints.Car;
 
 /// <summary>
-/// CreateCar endpoint
+/// Creates a car.
 /// </summary>
 public class CreateCar
     : Endpoint<CreateCarRequest, IResult>
@@ -37,8 +39,13 @@ public class CreateCar
     /// <inheritdoc/>
     public override void Configure()
     {
-        this.Get(CreateCarRequest.Route);
+        this.Post(CreateCarRequest.Route);
         this.AllowAnonymous();
+        this.Description(x => x
+            .Accepts<CreateCarRequest>(MediaTypeNames.Application.Json)
+            .Produces<Guid>(201, MediaTypeNames.Application.Json)
+            .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json)
+        );
     }
 
     /// <summary>

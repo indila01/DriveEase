@@ -4,6 +4,10 @@ using DriveEase.SharedKernel.Primitives.Result;
 using MediatR;
 
 namespace DriveEase.Application.Actions.Cars.Create;
+
+/// <summary>
+/// Create car command handler.
+/// </summary>
 public class CreateCarCommandHandler : IRequestHandler<CreateCarCommand, Result<Guid>>
 {
     /// <summary>

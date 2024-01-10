@@ -1,5 +1,4 @@
-﻿//using System.ComponentModel.DataAnnotations;
-
+﻿
 //namespace DriveEase.SharedKernel.Exceptions;
 //public class BadRequestException : Exception
 //{

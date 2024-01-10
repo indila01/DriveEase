@@ -6,4 +6,4 @@ namespace DriveEase.Application.Actions.Cars.Get;
 /// <summary>
 /// command 
 /// </summary>
-public record GetCarCommand(string model) : IRequest<Result<CarDto>>;
+public record GetCarCommand(string model) : IRequest<Result<CarResponse>>;

@@ -1,18 +1,20 @@
 ﻿using DriveEase.API.Extensions;
+using DriveEase.API.Model;
+using DriveEase.Application.Actions.Cars;
 using DriveEase.Application.Actions.Cars.Get;
 using FastEndpoints;
 using MediatR;
+using System.Net.Mime;
 
 namespace DriveEase.API.Endpoints.Car;
 
 /// <summary>
-/// get cars endpoint
+/// Returns a car by Id.
 /// </summary>
-/// <seealso cref="FastEndpoints.Endpoint&lt;DriveEase.API.Endpoints.Car.GetCarRequest, DriveEase.API.Endpoints.Car.GetCarResponse&gt;" />
 public class GetCar : Endpoint<GetCarRequest, IResult>
 {
     /// <summary>
-    /// The mediator
+    /// Gets a car.
     /// </summary>
     private readonly IMediator mediator;
 
@@ -30,6 +32,10 @@ public class GetCar : Endpoint<GetCarRequest, IResult>
     {
         this.Get(GetCarRequest.Route);
         this.AllowAnonymous();
+        this.Description(x => x
+           .Accepts<GetCarRequest>(MediaTypeNames.Application.Json)
+           .Produces<CarResponse>(200, MediaTypeNames.Application.Json)
+           .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json));
     }
 
     /// <inheritdoc/>

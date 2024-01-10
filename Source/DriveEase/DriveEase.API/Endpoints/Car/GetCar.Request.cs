@@ -8,5 +8,5 @@ public record GetCarRequest(string model)
     /// <summary>
     /// The route
     /// </summary>
-    public const string Route = "/api/cars/{id:Guid}";
+    public const string Route = "/api/cars";
 }
