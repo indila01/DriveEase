@@ -4,6 +4,7 @@ using DriveEase.SharedKernel.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Net;
 
 namespace DriveEase.API.Middleware;
@@ -57,25 +58,25 @@ public class GlobalExceptionHandler : IExceptionHandler
         CustomProblemDetails problem = new();
         switch (exception)
         {
-            //case BadRequestException badRequestException:
-            //    statusCode = HttpStatusCode.BadRequest;
-            //    problem = new CustomProblemDetails
-            //    {
-            //        Title = badRequestException.Message,
-            //        Status = (int)statusCode,
-            //        Detail = badRequestException.InnerException?.Message,
-            //        Type = nameof(BadRequestException),
-            //        Errors = badRequestException.ValidationErrors
-            //    };
-            //    break;
-            case NotFoundException NotFound:
+            case BadRequestException badRequestException:
+                statusCode = StatusCodes.Status400BadRequest;
+                problem = new CustomProblemDetails
+                {
+                    Title = badRequestException.Message,
+                    Status = statusCode,
+                    Detail = this.includeExceptionDetailsInResponse ? badRequestException.InnerException?.Message : string.Empty,
+                    Type = nameof(BadRequestException),
+                    Errors = this.includeExceptionDetailsInResponse ? badRequestException.ValidationErrors : ImmutableDictionary<string, string[]>.Empty,
+                };
+                break;
+            case NotFoundException notFound:
                 statusCode = StatusCodes.Status404NotFound;
                 problem = new CustomProblemDetails
                 {
-                    Title = NotFound.Message,
+                    Title = notFound.Message,
                     Status = statusCode,
                     Type = nameof(NotFoundException),
-                    Detail = this.includeExceptionDetailsInResponse ? NotFound.InnerException?.Message : string.Empty,
+                    Detail = this.includeExceptionDetailsInResponse ? notFound.InnerException?.Message : string.Empty,
                 };
                 break;
             default:
