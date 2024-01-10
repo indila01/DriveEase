@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DriveEase.Application\DriveEase.Application.csproj" />
+    <ProjectReference Include="..\DriveEase.Infrastructure\DriveEase.Infrastructure.csproj" />
     <ProjectReference Include="..\DriveEase.Persistance\DriveEase.Persistance.csproj" />
     <ProjectReference Include="..\DriveEase.SharedKernel\DriveEase.SharedKernel.csproj" />
   </ItemGroup>

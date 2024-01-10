@@ -55,7 +55,6 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         var statusCode = StatusCodes.Status500InternalServerError;
         CustomProblemDetails problem = new();
-
         switch (exception)
         {
             //case BadRequestException badRequestException:

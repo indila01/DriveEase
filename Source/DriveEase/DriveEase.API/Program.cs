@@ -1,5 +1,6 @@
 using DriveEase.API.Middleware;
 using DriveEase.Application;
+using DriveEase.Infrastructure;
 using DriveEase.Persistance;
 using DriveEase.SharedKernel;
 using FastEndpoints;
@@ -23,6 +24,10 @@ var config = builder.Configuration
 // register services for each layer
 builder.Services.RegisterPersistenceServices(config);
 builder.Services.RegisterApplicationServices();
+builder.Services.RegisterInfrastructureServices();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.
     AddFastEndpoints()
@@ -43,7 +48,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-app.UseMiddleware<GlobalExceptionHandler>();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
