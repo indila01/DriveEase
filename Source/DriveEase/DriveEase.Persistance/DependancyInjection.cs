@@ -1,6 +1,7 @@
 ﻿using DriveEase.Domain.Abstraction;
 using DriveEase.Domain.Repositories;
 using DriveEase.Persistance.EFCustomizations;
+using DriveEase.Persistance.Interceptors;
 using DriveEase.SharedKernel;
 using DriveEase.SharedKernel.Util;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +28,12 @@ public static class DependancyInjection
         var connectionString = configuration.GetConnectionString(Connectionstring.DriveEaseDbConnectionKey);
         Ensure.NotEmpty(connectionString, "DbConnection string is empty", nameof(connectionString));
 
-        services.AddDbContext<DriveEaseDbContext>(options =>
-        {
-            options.UseSqlServer(connectionString);
-        });
+        services.AddSingleton<UpdateAuditableInterceptor>();
+
+        services.AddDbContext<DriveEaseDbContext>(
+            (sp, options) => options
+            .UseSqlServer(connectionString)
+            .AddInterceptors(sp.GetRequiredService<UpdateAuditableInterceptor>()));
 
         // register repositories
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

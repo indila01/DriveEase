@@ -2,9 +2,11 @@ using DriveEase.API.Middleware;
 using DriveEase.Application;
 using DriveEase.Infrastructure;
 using DriveEase.Persistance;
+using DriveEase.Persistance.EFCustomizations;
 using DriveEase.SharedKernel;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +39,12 @@ builder.Services.
 builder.Services.Configure<ApplicationConfig>(
     builder.Configuration.GetSection(nameof(ApplicationConfig)));
 
+
+builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+
+builder.Services.AddHealthChecks()
+    .AddSqlServer(config?.GetConnectionString(Connectionstring.DriveEaseDbConnectionKey));
+
 builder.Services.Add(ServiceDescriptor.Singleton(typeof(IOptionsSnapshot<>), typeof(OptionsManager<>)));
 
 builder.Services.AddControllers();
@@ -60,6 +68,14 @@ if (app.Environment.IsDevelopment())
     //});
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope
+        .ServiceProvider
+        .GetRequiredService<DriveEaseDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.UseFastEndpoints()
     .UseSwaggerGen();
 app.UseHttpsRedirection();
@@ -68,6 +84,5 @@ app.UseCors("DefaultAnyOriginPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 app.Run();

@@ -4,6 +4,7 @@ using DriveEase.SharedKernel.Primitives.Result;
 using System.Text.RegularExpressions;
 
 namespace DriveEase.Domain.ValueObjects;
+
 /// <summary>
 /// Represents the email value object.
 /// </summary>
@@ -23,7 +24,7 @@ public sealed class Email : ValueObject
     /// Initializes a new instance of the <see cref="Email"/> class.
     /// </summary>
     /// <param name="value">The email value.</param>
-    private Email(string value) => Value = value;
+    private Email(string value) => this.Value = value;
 
     /// <summary>
     /// Gets the email value.

@@ -13,21 +13,14 @@ public class Car : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// </summary>
     /// <param name="make">The make.</param>
     /// <param name="model">The model.</param>
-    /// <param name="status">The status.</param>
-    /// <param name="createdBy">The created by.</param>
     private Car(string make, string model)
         : base(Guid.NewGuid())
     {
         Ensure.NotEmpty(make, "The make is required", nameof(make));
         Ensure.NotEmpty(model, "The model is required", nameof(model));
-        //Ensure.NotEmpty(status, "The status is required", nameof(status));
-        //Ensure.NotEmpty(createdBy, "The createdBy is required", nameof(createdBy));
-
         this.Make = make;
         this.Model = model;
-        //this.Status = status;
-        this.CreatedDate = DateTime.UtcNow;
-        //this.CreatedBy = createdBy;
+        this.Status = "Available";
     }
 
     /// <summary>
@@ -65,13 +58,7 @@ public class Car : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     public DateTime CreatedDate { get; }
 
     /// <inheritdoc/>
-    public string CreatedBy { get; }
-
-    /// <inheritdoc/>
-    public DateTime UpdatedDate { get; }
-
-    /// <inheritdoc/>
-    public string? UpdatedBy { get; }
+    public DateTime? UpdatedDate { get; }
 
     /// <inheritdoc />
     public DateTime? DeletedDate { get; }
@@ -84,8 +71,6 @@ public class Car : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// </summary>
     /// <param name="make">The make.</param>
     /// <param name="model">The model.</param>
-    /// <param name="status">The status.</param>
-    /// <param name="createdBy">The created by.</param>
     /// <returns>Car.</returns>
     public static Car Create(string make, string model)
     {

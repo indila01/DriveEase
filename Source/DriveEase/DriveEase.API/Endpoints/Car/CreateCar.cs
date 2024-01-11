@@ -57,7 +57,6 @@ public class CreateCar
     public override async Task<IResult> ExecuteAsync(CreateCarRequest req, CancellationToken ct)
     {
         var result = await this.mediator.Send(new CreateCarCommand(req.make, req.model));
-
         if (result.IsSuccess)
         {
             return Results.Ok(result.Value);

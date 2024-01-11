@@ -28,12 +28,6 @@ public class DriveEaseDbContext : DbContext, IUnitOfWork
         this.dateTime = dateTime;
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DriveEaseDbContext).Assembly);
-        base.OnModelCreating(modelBuilder);
-    }
-
     /// <summary>
     /// Gets or sets the cars.
     /// </summary>
@@ -51,13 +45,20 @@ public class DriveEaseDbContext : DbContext, IUnitOfWork
     public DbSet<User> Users { get; set; }
 
     /// <inheritdoc/>
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         DateTime utcNow = this.dateTime.UtcNow;
 
-        this.UpdateAuditableEntities(utcNow);
-        this.UpdateSoftDeletableEntities(utcNow);
-        return base.SaveChangesAsync(cancellationToken);
+        //this.UpdateAuditableEntities(utcNow);
+        //this.UpdateSoftDeletableEntities(utcNow);
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DriveEaseDbContext).Assembly);
+        base.OnModelCreating(modelBuilder);
     }
 
     /// <summary>
