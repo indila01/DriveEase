@@ -7,6 +7,7 @@ using DriveEase.SharedKernel;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -92,7 +93,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapHealthChecks("healthcheck", new()
+app.MapHealthChecks("healthcheck", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
 });
