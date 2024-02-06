@@ -12,6 +12,7 @@ public interface ICarRepository : IBaseRepository<Car>
     /// Gets the car by model asynchronous.
     /// </summary>
     /// <param name="model">The model.</param>
-    /// <returns>Car.</returns>
-    Task<Car> GetCarByModelAsync(string model);
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>car.</returns>
+    Task<Car> GetCarByModelAsync(string model, CancellationToken cancellationToken = default);
 }

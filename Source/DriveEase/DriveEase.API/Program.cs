@@ -10,6 +10,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,12 @@ var config = builder.Configuration
     //})
     .AddUserSecrets<Program>(optional: true).Build();
 
+// serilog
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+    loggerConfig.ReadFrom.Configuration(context.Configuration);
+});
+
 // register services for each layer
 builder.Services.RegisterPersistenceServices(config);
 builder.Services.RegisterApplicationServices();
@@ -36,7 +43,6 @@ builder.Services.AddProblemDetails();
 builder.Services.
     AddFastEndpoints()
     .SwaggerDocument();
-
 
 // options pattern
 builder.Services.Configure<ApplicationConfig>(
@@ -86,6 +92,12 @@ using (var scope = app.Services.CreateScope())
 app.UseFastEndpoints()
     .UseSwaggerGen();
 app.UseHttpsRedirection();
+
+app.UseMiddleware<RequestLogContextMiddleware>();
+
+app.UseSerilogRequestLogging();
+
+app.UseExceptionHandler();
 
 app.UseCors("DefaultAnyOriginPolicy");
 

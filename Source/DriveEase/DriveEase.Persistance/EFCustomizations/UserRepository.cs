@@ -1,5 +1,6 @@
 ﻿using DriveEase.Domain.Entities;
 using DriveEase.Domain.Repositories;
+using DriveEase.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace DriveEase.Persistance.EFCustomizations;
@@ -17,8 +18,18 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     }
 
     /// <inheritdoc/>
-    public async Task<User> GetUserByName(string username)
+    public async Task<User> GetUserByName(string username, CancellationToken cancellationToken = default)
         => await this.dbContext?.Users
         .AsNoTracking()
-        .FirstOrDefaultAsync(x => x.FirstName == username);
+        .FirstOrDefaultAsync(x => x.FirstName == username, cancellationToken);
+
+    /// <inheritdoc/>
+    public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
+    {
+        var user = await this.dbContext?.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
+        return user is null;
+    }
 }

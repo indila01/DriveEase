@@ -2,12 +2,12 @@
 using DriveEase.SharedKernel.Primitives.Result;
 using MediatR;
 
-namespace DriveEase.Application.Actions.Users;
+namespace DriveEase.Application.Actions.Users.Get;
 
 /// <summary>
 /// user command handler
 /// </summary>
-/// <seealso cref="MediatR.IRequestHandler&lt;DriveEase.Application.Actions.Users.GetUserCommand, DriveEase.SharedKernel.Primitives.Result.Result&lt;DriveEase.Application.Actions.Users.UserDto&gt;&gt;" />
+/// <seealso cref="IRequestHandler&lt;GetUserCommand, Result&lt;UserDto&gt;&gt;" />
 public class GetUserCommandHandler : IRequestHandler<GetUserCommand, Result<UserDto>>
 {
     /// <summary>
@@ -35,7 +35,7 @@ public class GetUserCommandHandler : IRequestHandler<GetUserCommand, Result<User
     /// <returns></returns>
     public async Task<Result<UserDto>> Handle(GetUserCommand request, CancellationToken cancellationToken)
     {
-        var query = await this.userRepository.GetUserByName(request.Username);
+        var query = await userRepository.GetUserByName(request.username);
 
         return Result.Success<UserDto>(new(query.Id, query.FirstName));
     }

@@ -17,8 +17,8 @@ public class CarRepository : BaseRepository<Car>, ICarRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Car> GetCarByModelAsync(string model)
+    public async Task<Car> GetCarByModelAsync(string model, CancellationToken cancellationToken = default)
         => await this.dbContext.Cars?
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Model == model);
+            .FirstOrDefaultAsync(x => x.Model == model, cancellationToken);
 }

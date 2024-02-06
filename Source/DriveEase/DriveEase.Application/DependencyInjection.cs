@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DriveEase.Application.Behaviors;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace DriveEase.Application;
@@ -16,8 +17,11 @@ public static class DependancyInjection
     public static IServiceCollection RegisterApplicationServices(
         this IServiceCollection services)
     {
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.AddOpenBehavior(typeof(RequestLoggingPipelineBehavior<,>));
+        });
         return services;
     }
-
 }
