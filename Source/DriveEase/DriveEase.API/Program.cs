@@ -7,10 +7,13 @@ using DriveEase.SharedKernel;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +27,8 @@ var config = builder.Configuration
     //    x.Connect("asd");
     //    x.ConfigureKeyVault();
     //})
-    .AddUserSecrets<Program>(optional: true).Build();
+    .AddUserSecrets<Program>(optional: true)
+    .Build();
 
 // serilog
 builder.Host.UseSerilog((context, loggerConfig) =>
@@ -39,6 +43,21 @@ builder.Services.RegisterInfrastructureServices();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = config["Jwt:Issuer"],
+            ValidAudience = config["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
+        };
+    });
 
 builder.Services.
     AddFastEndpoints()

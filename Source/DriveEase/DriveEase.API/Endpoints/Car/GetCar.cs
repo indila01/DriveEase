@@ -1,10 +1,7 @@
 ﻿using DriveEase.API.Extensions;
-using DriveEase.API.Model;
-using DriveEase.Application.Actions.Cars;
 using DriveEase.Application.Actions.Cars.Get;
 using FastEndpoints;
 using MediatR;
-using System.Net.Mime;
 
 namespace DriveEase.API.Endpoints.Car;
 
@@ -32,10 +29,10 @@ public class GetCar : Endpoint<GetCarRequest, IResult>
     {
         this.Get(GetCarRequest.Route);
         this.AllowAnonymous();
-        this.Description(x => x
-           .Accepts<GetCarRequest>(MediaTypeNames.Application.Json)
-           .Produces<CarResponse>(200, MediaTypeNames.Application.Json)
-           .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json));
+        //this.Description(x => x
+        //   //.Accepts<GetCarRequest>(MediaTypeNames.Application.Json)
+        //   .Produces<CarResponse>(200, MediaTypeNames.Application.Json)
+        //   .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json));
     }
 
     /// <inheritdoc/>
@@ -43,6 +40,16 @@ public class GetCar : Endpoint<GetCarRequest, IResult>
     {
         var result = await this.mediator.Send(new GetCarCommand(req.model));
 
-        return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+        //if (result is { IsSuccess: true })
+        //{
+        //    Results.Ok(result.Value);
+        //}
+
+        //if (result is { IsSuccess: false, Error: not null })
+        //{
+        //    Results.
+        //}
+
+        return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails(includeErrorDetails: true);
     }
 }

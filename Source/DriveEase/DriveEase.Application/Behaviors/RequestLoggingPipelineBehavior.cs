@@ -9,8 +9,12 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>
     where TRequest : class
     where TResponse : Result
 {
-
     private readonly ILogger<RequestLoggingPipelineBehavior<TRequest, TResponse>> logger;
+
+    public RequestLoggingPipelineBehavior(ILogger<RequestLoggingPipelineBehavior<TRequest, TResponse>> logger)
+    {
+        this.logger = logger;
+    }
 
     public async Task<TResponse> Handle(
         TRequest request,

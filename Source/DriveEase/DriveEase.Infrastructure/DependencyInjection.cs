@@ -1,5 +1,7 @@
-﻿using DriveEase.SharedKernel.Util;
+﻿using DriveEase.Infrastructure.BackgroundJobs;
+using DriveEase.SharedKernel.Util;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz;
 
 namespace DriveEase.Infrastructure;
 
@@ -16,6 +18,25 @@ public static class DependencyInjection
     public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services)
     {
         services.AddTransient<IDateTime, DateTimeProvider>();
+
+        services.AddQuartz(o =>
+        {
+            o.UseMicrosoftDependencyInjectionJobFactory();
+
+            var jobKey = JobKey.Create(nameof(LoggingBackgroundJob));
+
+
+            o.AddJob<LoggingBackgroundJob>(jobKey)
+                .AddTrigger(trigger =>
+                            trigger.ForJob(jobKey)
+                                    .WithSimpleSchedule(schedule =>
+                                        schedule.WithIntervalInSeconds(5).RepeatForever()));
+        });
+        services.AddQuartzHostedService(o =>
+        {
+            o.WaitForJobsToComplete = true;
+        });
+
         return services;
     }
 }
