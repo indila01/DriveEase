@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = config["Jwt:Issuer"],
             ValidAudience = config["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]))
         };
     });
 
@@ -66,6 +66,9 @@ builder.Services.
 // options pattern
 builder.Services.Configure<ApplicationConfig>(
     builder.Configuration.GetSection(nameof(ApplicationConfig)));
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection(nameof(JwtSettings)));
 
 builder.Services
     .AddHealthChecksUI(options
@@ -90,15 +93,11 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
-{
-    //app.UseSwagger();
-    //app.UseSwaggerUI(o =>
-    //{
-    //    o.SwaggerEndpoint("/swagger/v1/swagger.json", "DriveEase API");
-    //o.OAuthClientId(configuration["SwaggerClientAd:ClientId"]);
-    //});
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseOpenApi();
+//    app.UseSwaggerUi();
+//}
 
 using (var scope = app.Services.CreateScope())
 {
