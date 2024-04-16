@@ -1,7 +1,7 @@
 ﻿namespace DriveEase.SharedKernel.Exceptions;
 
 /// <summary>
-/// NotFoundException exception class
+/// NotFoundException exception class.
 /// </summary>
 /// <seealso cref="System.Exception" />
 public class NotFoundException : Exception
@@ -14,6 +14,5 @@ public class NotFoundException : Exception
     public NotFoundException(string name, object key)
         : base($"{name} ({key}) was not found")
     {
-
     }
 }

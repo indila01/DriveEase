@@ -1,4 +1,5 @@
-﻿using DriveEase.Domain.Core.Errors;
+﻿using DriveEase.Domain.Abstraction;
+using DriveEase.Domain.Core.Errors;
 using DriveEase.Domain.Repositories;
 using DriveEase.Domain.ValueObjects;
 using DriveEase.SharedKernel.Primitives.Result;
@@ -21,12 +22,21 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     private IUserRepository userRepository { get; set; }
 
     /// <summary>
+    /// Gets or sets the password hasher.
+    /// </summary>
+    /// <value>
+    /// The password hasher.
+    /// </value>
+    private IPasswordHasher passwordHasher { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
     /// </summary>
     /// <param name="userRepository">The user repository.</param>
-    public CreateUserCommandHandler(IUserRepository userRepository)
+    public CreateUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         this.userRepository = userRepository;
+        this.passwordHasher = passwordHasher;
     }
 
     public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -34,7 +44,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         var email = Email.Create(request.email);
         var firstName = FirstName.Create(request.firstName);
         var lastName = Email.Create(request.lastName);
-        var password = Email.Create(request.password);
+        var password = Password.Create(request.password);
 
         var firstFailiureOrSuccess = Result.FirstFailureOrSuccess(email, firstName, lastName, password);
 
@@ -43,12 +53,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
             return Result.Failure<string>(firstFailiureOrSuccess.Error);
         }
 
-        if (!await userRepository.IsEmailUniqueAsync(email.Value))
+        if (!await this.userRepository.IsEmailUniqueAsync(email.Value))
         {
             return Result.Failure<string>(DomainErrors.User.DuplicateEmail);
         }
+
+        string passwordHash = passwordHasher.HashPassword(password.Value);
         return Result.Success(String.Empty);
-        //string passwordHash = passwordHasher.HashPassword(passwordResult.Value);
 
     }
 }

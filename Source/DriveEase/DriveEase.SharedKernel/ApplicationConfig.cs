@@ -1,6 +1,7 @@
 ﻿namespace DriveEase.SharedKernel;
+
 /// <summary>
-/// app config
+/// app config.
 /// </summary>
 public sealed class ApplicationConfig
 {

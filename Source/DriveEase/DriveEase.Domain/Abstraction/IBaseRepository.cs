@@ -3,7 +3,7 @@
 namespace DriveEase.Domain.Abstraction;
 
 /// <summary>
-/// IBaseReposptory
+/// IBaseReposptory.
 /// </summary>
 /// <typeparam name="TEntity">The type of the entity.</typeparam>
 public interface IBaseRepository<TEntity>

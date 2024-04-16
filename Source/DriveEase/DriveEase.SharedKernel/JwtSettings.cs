@@ -1,7 +1,7 @@
 ﻿namespace DriveEase.SharedKernel;
 
 /// <summary>
-/// Jwt settings
+/// Jwt settings.
 /// </summary>
 public class JwtSettings
 {

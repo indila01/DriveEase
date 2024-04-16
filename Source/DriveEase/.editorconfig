@@ -54,6 +54,7 @@ dotnet_diagnostic.S2259.severity = silent
 
 # SA1208: System using directives should be placed before other using directives
 dotnet_diagnostic.SA1208.severity = silent
+dotnet_diagnostic.SA1629.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####
