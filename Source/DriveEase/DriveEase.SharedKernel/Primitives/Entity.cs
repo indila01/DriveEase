@@ -1,10 +1,12 @@
 ﻿using DriveEase.SharedKernel.Util;
 
 namespace DriveEase.SharedKernel.Primitives;
+
 /// <summary>
 /// Represents the base class that all entities derive from.
 /// </summary>
-public abstract class Entity : IEquatable<Entity>
+public abstract class Entity
+    : IEquatable<Entity>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Entity"/> class.

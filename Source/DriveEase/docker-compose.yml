@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  driveease.api:
+    image: ${DOCKER_REGISTRY-}driveeaseapi
+    container_name: DriveEase.API
+    build:
+      context: .
+      dockerfile: DriveEase.API/Dockerfile
+    ports:
+       - 5001:8081
+
+  driveEase.Db:
+     image: mcr.microsoft.com/mssql/server:2022-latest
+     container_name: DriveEase.Db
+     volumes:
+        - ./.containers/database:/var/opt/mssql/data 
+     ports:
+        - "1433:1433" 
+     environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Admin1234$"
+  driveEase.Seq:
+    image: datalust/seq:latest
+    container_name: DriveEase.Seq
+    environment:
+        - ACCEPT_EULA=Y
+    ports:
+        - 5341:5341
+        - 8081:80
+    
