@@ -1,6 +1,6 @@
 ﻿using DriveEase.API.Extensions;
 using DriveEase.API.Model;
-using DriveEase.Application.Actions.Users.Create;
+using DriveEase.Application.Actions.Auth.Login;
 using DriveEase.SharedKernel;
 using FastEndpoints;
 using MediatR;
@@ -10,10 +10,10 @@ using System.Net.Mime;
 namespace DriveEase.API.Endpoints.Auth;
 
 /// <summary>
-/// CreateUser endpoint
+/// login
 /// </summary>
-public class CreateUser
-    : Endpoint<CreateUserRequest, IResult>
+public class Login
+    : Endpoint<LoginRequeust, IResult>
 {
     /// <summary>
     /// The mediator
@@ -26,11 +26,11 @@ public class CreateUser
     private readonly ApplicationConfig appSettings;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateUser"/> class.
+    /// Initializes a new instance of the <see cref="Login"/> class.
     /// </summary>
     /// <param name="mediator">The mediator.</param>
     /// <param name="appSettings">The application settings.</param>
-    public CreateUser(IMediator mediator, IOptionsSnapshot<ApplicationConfig> appSettings)
+    public Login(IMediator mediator, IOptionsSnapshot<ApplicationConfig> appSettings)
     {
         this.mediator = mediator;
         this.appSettings = appSettings.Value;
@@ -39,21 +39,19 @@ public class CreateUser
     /// <inheritdoc/>
     public override void Configure()
     {
-        this.Post(CreateUserRequest.Route);
+        this.Post(LoginRequeust.Route);
         this.AllowAnonymous();
         this.Description(x => x
-            .Accepts<CreateUserRequest>(MediaTypeNames.Application.Json)
+            .Accepts<LoginRequeust>(MediaTypeNames.Application.Json)
             .Produces<Guid>(201, MediaTypeNames.Application.Json)
             .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json));
     }
 
     /// <inheritdoc/>
-    public override async Task<IResult> ExecuteAsync(CreateUserRequest req, CancellationToken ct)
+    public override async Task<IResult> ExecuteAsync(LoginRequeust req, CancellationToken ct)
     {
         var result = await this.mediator.Send(
-            new CreateUserCommand(
-                 req.firstName,
-                 req.lastName,
+            new LoginCommand(
                  req.email,
                  req.password));
 

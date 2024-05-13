@@ -25,6 +25,11 @@ public static class DomainErrors
             "The current user does not have the permissions to perform that operation.");
 
         /// <summary>
+        /// Gets the invalid password.
+        /// </summary>
+        public static Error InvalidPassword => Error.Validation("User.InvalidPassword", "The password is invalid");
+
+        /// <summary>
         /// Gets the duplicate email.
         /// </summary>
         /// <value>

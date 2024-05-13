@@ -1,6 +1,6 @@
 ﻿using DriveEase.Domain.Abstraction;
-using DriveEase.Domain.Entities;
 using DriveEase.Domain.Core.Errors;
+using DriveEase.Domain.Entities;
 using DriveEase.Domain.Repositories;
 using DriveEase.Domain.ValueObjects;
 using DriveEase.SharedKernel.Primitives.Result;
@@ -20,7 +20,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// Iunit of work.
     /// </value>
-    private IUnitOfWork unitOfWork;
+    private readonly IUnitOfWork unitOfWork;
 
     /// <summary>
     /// Gets or sets the user repository.
@@ -28,31 +28,45 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// The user repository.
     /// </value>
-    private IUserRepository userRepository;
+    private readonly IUserRepository userRepository;
+
     /// <summary>
     /// Gets or sets the password hasher.
     /// </summary>
     /// <value>
     /// The password hasher.
     /// </value>
-    private IPasswordHasher passwordHasher;
+    private readonly IPasswordHasher passwordHasher;
+
+    /// <summary>
+    /// The JWT provider
+    /// </summary>
+    /// <value>
+    /// The JWT provider.
+    /// </value>
+    private readonly IJwtProvider jwtProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
     /// </summary>
     /// <param name="userRepository">The user repository.</param>
-    public CreateUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IUnitOfWork unitOfWork)
+    public CreateUserCommandHandler(
+        IUserRepository userRepository,
+        IPasswordHasher passwordHasher,
+        IUnitOfWork unitOfWork,
+        IJwtProvider jwtProvider)
     {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
         this.unitOfWork = unitOfWork;
+        this.jwtProvider = jwtProvider;
     }
 
     public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.email);
         var firstName = FirstName.Create(request.firstName);
-        var lastName = Email.Create(request.lastName);
+        var lastName = LastName.Create(request.lastName);
         var password = Password.Create(request.password);
 
         var firstFailiureOrSuccess = Result.FirstFailureOrSuccess(email, firstName, lastName, password);
@@ -67,15 +81,15 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
             return Result.Failure<string>(DomainErrors.User.DuplicateEmail);
         }
 
-        string passwordHash = passwordHasher.HashPassword(password.Value);
-        var user = User.Create(firstName, lastName, email, passwordHash)
+        string passwordHash = this.passwordHasher.HashPassword(password.Value);
+        var user = User.Create(firstName.Value, lastName.Value, email.Value, passwordHash);
 
-        userRepository.Add(user);
+        this.userRepository.Add(user);
         await this.unitOfWork.SaveChangesAsync(cancellationToken);
 
-        i
+        string token = this.jwtProvider.Create(user);
 
-        return Result.Success(String.Empty);
+        return Result.Success(token);
 
     }
 }

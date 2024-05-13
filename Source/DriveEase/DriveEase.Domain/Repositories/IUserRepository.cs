@@ -18,6 +18,14 @@ public interface IUserRepository : IBaseRepository<User>
     Task<User> GetUserByName(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets the user by email.
+    /// </summary>
+    /// <param name="email">The email.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns></returns>
+    Task<User> GetUserByEmail(Email email, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Determines whether [is email unique asynchronous] [the specified email].
     /// </summary>
     /// <param name="email">The email.</param>

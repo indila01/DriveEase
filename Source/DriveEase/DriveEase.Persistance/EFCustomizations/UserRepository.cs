@@ -18,6 +18,12 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     }
 
     /// <inheritdoc/>
+    public async Task<User> GetUserByEmail(Email email, CancellationToken cancellationToken = default)
+        => await this.dbContext?.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Email == email.Value, cancellationToken);
+
+    /// <inheritdoc/>
     public async Task<User> GetUserByName(string username, CancellationToken cancellationToken = default)
         => await this.dbContext?.Users
         .AsNoTracking()

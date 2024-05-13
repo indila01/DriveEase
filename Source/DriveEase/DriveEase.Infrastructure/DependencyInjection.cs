@@ -1,4 +1,6 @@
-﻿using DriveEase.Infrastructure.BackgroundJobs;
+﻿using DriveEase.Domain.Abstraction;
+using DriveEase.Infrastructure.Authentication;
+using DriveEase.Infrastructure.BackgroundJobs;
 using DriveEase.SharedKernel.Util;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
@@ -36,6 +38,10 @@ public static class DependencyInjection
         {
             o.WaitForJobsToComplete = true;
         });
+
+        services.AddTransient<IPasswordHasher, PasswordHasher>();
+        services.AddTransient<IPasswordHashChecker, PasswordHasher>();
+
 
         return services;
     }

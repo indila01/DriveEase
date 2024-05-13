@@ -87,4 +87,13 @@ public class User : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     {
         return new User(firstName, lastName, email, passwordHash);
     }
+
+    /// <summary>
+    /// Verifies that the provided password hash matches the password hash.
+    /// </summary>
+    /// <param name="password">The password to be checked against the user password hash.</param>
+    /// <param name="passwordHashChecker">The password hash checker.</param>
+    /// <returns>True if the password hashes match, otherwise false.</returns>
+    public bool VerifyPasswordHash(string password, IPasswordHashChecker passwordHashChecker)
+        => !string.IsNullOrWhiteSpace(password) && passwordHashChecker.HashesMatch(passwordHash, password);
 }
