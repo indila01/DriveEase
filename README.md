@@ -1,7 +1,6 @@
 # Features 
 
-__Background jobs with Quartz__
-
+* __Background jobs with Quartz__
 * __Serilog__
 * __MediatR pipeline behavior__
 * __Clean architecture__
