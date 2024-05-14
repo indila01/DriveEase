@@ -12,7 +12,6 @@ namespace DriveEase.Infrastructure.Authentication;
 /// <summary>
 /// JWTt provider class
 /// </summary>
-/// <seealso cref="DriveEase.Infrastructure.Authentication.JwtProvider" />
 public class JwtProvider : IJwtProvider
 {
     public JwtSettings jwtSettings { get; set; }
