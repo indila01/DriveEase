@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.
     AddFastEndpoints()
-    .SwaggerDocument();
+    .SwaggerDocument(x => x.AutoTagPathSegmentIndex = 2);
 
 // options pattern
 builder.Services.Configure<ApplicationConfig>(
@@ -71,10 +71,11 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection(nameof(JwtSettings)));
 
 builder.Services
-    .AddHealthChecksUI(options
-    => options
-        .AddHealthCheckEndpoint("HealthCheck API", "/healthcheck"))
-    .AddInMemoryStorage();
+    .AddHealthChecksUI(options =>
+    {
+        options.AddHealthCheckEndpoint("HealthCheck API", "/healthcheck");
+        options.SetEvaluationTimeInSeconds(600);
+    }).AddInMemoryStorage();
 
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<DriveEaseDbContext>()

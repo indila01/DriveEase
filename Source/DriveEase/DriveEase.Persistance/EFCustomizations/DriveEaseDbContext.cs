@@ -57,6 +57,9 @@ public class DriveEaseDbContext : DbContext, IUnitOfWork
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>().HasQueryFilter(x => !x.IsDeleted);
+        modelBuilder.Entity<Car>().HasQueryFilter(x => !x.IsDeleted);
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DriveEaseDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }

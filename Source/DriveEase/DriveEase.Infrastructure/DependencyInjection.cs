@@ -33,7 +33,7 @@ public static class DependencyInjection
                 .AddTrigger(trigger =>
                             trigger.ForJob(jobKey)
                                     .WithSimpleSchedule(schedule =>
-                                        schedule.WithIntervalInSeconds(5).RepeatForever()));
+                                        schedule.WithIntervalInSeconds(600).RepeatForever()));
         });
         services.AddQuartzHostedService(o =>
         {

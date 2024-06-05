@@ -29,11 +29,14 @@ public static class DependancyInjection
         Ensure.NotEmpty(connectionString, "DbConnection string is empty", nameof(connectionString));
 
         services.AddSingleton<UpdateAuditableInterceptor>();
+        services.AddSingleton<SoftDeleteInterceptor>();
 
         services.AddDbContext<DriveEaseDbContext>(
             (sp, options) => options
             .UseSqlServer(connectionString)
-            .AddInterceptors(sp.GetRequiredService<UpdateAuditableInterceptor>()));
+            .AddInterceptors(
+                sp.GetRequiredService<UpdateAuditableInterceptor>(),
+                sp.GetRequiredService<SoftDeleteInterceptor>()));
 
         // register repositories
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
