@@ -4,6 +4,7 @@ using DriveEase.Persistance.EFCustomizations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DriveEase.Persistance.Migrations
 {
     [DbContext(typeof(DriveEaseDbContext))]
-    partial class DriveEaseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240607130646_Outbox_table")]
+    partial class Outbox_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

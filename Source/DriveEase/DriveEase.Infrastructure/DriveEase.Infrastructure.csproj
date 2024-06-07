@@ -9,16 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DriveEase.Domain\DriveEase.Domain.csproj" />
     <ProjectReference Include="..\DriveEase.SharedKernel\DriveEase.SharedKernel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Outbox/" />
   </ItemGroup>
 
 </Project>

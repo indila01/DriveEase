@@ -1,5 +1,4 @@
 ﻿using DriveEase.Domain.Entities;
-using DriveEase.SharedKernel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -30,7 +29,7 @@ public class PublishDomainEventsInterceptor(IPublisher publisher) : SaveChangesI
         .Select(entry => entry.Entity)
         .SelectMany(entity =>
          {
-             List<IDomainEvent> domainEvents = entity.DomainEvents.ToList();
+             var domainEvents = entity.DomainEvents;
              entity.ClearDomainEvents();
              return domainEvents;
          });
