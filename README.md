@@ -1,7 +1,7 @@
 # Features 
 
 * __Outbox pattern__
-* * __Domain events__
+* __Domain events__
 * __Background jobs with Quartz__
 * __Serilog__
 * __MediatR pipeline behavior__
