@@ -30,13 +30,15 @@ public static class DependancyInjection
 
         services.AddSingleton<UpdateAuditableInterceptor>();
         services.AddSingleton<SoftDeleteInterceptor>();
+        services.AddSingleton<PublishDomainEventsInterceptor>();
 
         services.AddDbContext<DriveEaseDbContext>(
             (sp, options) => options
             .UseSqlServer(connectionString)
             .AddInterceptors(
                 sp.GetRequiredService<UpdateAuditableInterceptor>(),
-                sp.GetRequiredService<SoftDeleteInterceptor>()));
+                sp.GetRequiredService<SoftDeleteInterceptor>(),
+                sp.GetRequiredService<PublishDomainEventsInterceptor>()));
 
         // register repositories
         services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

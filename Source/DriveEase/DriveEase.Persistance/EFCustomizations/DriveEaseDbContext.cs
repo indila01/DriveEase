@@ -17,6 +17,7 @@ public class DriveEaseDbContext : DbContext, IUnitOfWork
     /// </summary>
     private readonly IDateTime dateTime;
 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DriveEaseDbContext"/> class.
     /// </summary>
@@ -47,11 +48,8 @@ public class DriveEaseDbContext : DbContext, IUnitOfWork
     /// <inheritdoc/>
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        DateTime utcNow = this.dateTime.UtcNow;
-
-        //this.UpdateAuditableEntities(utcNow);
-        //this.UpdateSoftDeletableEntities(utcNow);
-        return await base.SaveChangesAsync(cancellationToken);
+        int result = await base.SaveChangesAsync(cancellationToken);
+        return result;
     }
 
     /// <inheritdoc/>

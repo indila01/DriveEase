@@ -8,7 +8,6 @@ namespace DriveEase.API.Model;
 /// <seealso cref="Microsoft.AspNetCore.Mvc.ProblemDetails" />
 public class CustomProblemDetails : ProblemDetails
 {
-
     /// <summary>
     /// Gets or sets the errors.
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿using DriveEase.Domain.Abstraction;
-using DriveEase.SharedKernel.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -20,9 +19,8 @@ internal sealed class SoftDeleteInterceptor : SaveChangesInterceptor
         if (eventData.Context is not null)
         {
             DateTime utcNow = DateTime.UtcNow;
-            var entities = eventData.Context
-                .ChangeTracker
-                .Entries<ISoftDeletableEntity>()
+            var entities = eventData
+                .Context.ChangeTracker.Entries<ISoftDeletableEntity>()
                 .Where(x => x.State == EntityState.Deleted);
 
             foreach (EntityEntry<ISoftDeletableEntity> entity in entities)

@@ -17,4 +17,8 @@
     <ProjectReference Include="..\DriveEase.SharedKernel\DriveEase.SharedKernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Outbox/" />
+  </ItemGroup>
+
 </Project>

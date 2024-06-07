@@ -37,7 +37,6 @@ public class CreateCarCommandHandler : IRequestHandler<CreateCarCommand, Result<
         this.unitOfWork = unitOfWork;
     }
 
-
     public async Task<Result<Guid>> Handle(CreateCarCommand request, CancellationToken cancellationToken)
     {
         var car = Car.Create(request.make, request.model);

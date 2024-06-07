@@ -28,7 +28,6 @@ public static class DependencyInjection
 
             var jobKey = JobKey.Create(nameof(LoggingBackgroundJob));
 
-
             o.AddJob<LoggingBackgroundJob>(jobKey)
                 .AddTrigger(trigger =>
                             trigger.ForJob(jobKey)
