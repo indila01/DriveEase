@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DriveEase.Persistance;
 
-public class OutboxMessageRepository(DriveEaseDbContext dbContext) : IOutboxMessageRepository
+/// <summary>
+/// Out box message repository
+/// </summary>
+public class OutboxMessageRepository(DriveEaseDbContext dbContext)
+ : IOutboxMessageRepository
 {
+    /// <inheritdoc/>
     public async Task<List<OutboxMessage>> GetOutboxMessages()
     {
         return await dbContext

@@ -48,6 +48,6 @@ public sealed class Email : ValueObject
     /// <inheritdoc />
     protected override IEnumerable<object> GetAtomicValues()
     {
-        yield return Value;
+        yield return this.Value;
     }
 }

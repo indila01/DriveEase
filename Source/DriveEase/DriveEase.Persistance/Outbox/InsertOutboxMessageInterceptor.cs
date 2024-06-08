@@ -6,13 +6,21 @@ using Newtonsoft.Json;
 
 namespace DriveEase.Persistance;
 
+/// <summary>
+/// InsertOutboxMessageInterceptor
+/// </summary>
 public class InsertOutboxMessageInterceptor : SaveChangesInterceptor
 {
+    /// <summary>
+    /// jsonSerializerSettings
+    /// </summary>
+    /// <returns>JsonSerializerSettings</returns>
     private static readonly JsonSerializerSettings jsonSerializerSettings = new()
     {
-        TypeNameHandling = TypeNameHandling.All
+        TypeNameHandling = TypeNameHandling.All,
     };
 
+    /// <inheritdoc/>
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -26,6 +34,10 @@ public class InsertOutboxMessageInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
+    /// <summary>
+    /// insert Outbox Messages
+    /// </summary>
+    /// <param name="context">db context</param>
     private static void insertOutboxMessages(DbContext context)
     {
         var utcNow = DateTime.UtcNow;

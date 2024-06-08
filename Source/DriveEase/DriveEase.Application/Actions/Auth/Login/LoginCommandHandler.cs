@@ -10,7 +10,17 @@ namespace DriveEase.Application.Actions.Auth.Login;
 /// <summary>
 /// Login command handler
 /// </summary>
-public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
+/// <remarks>
+/// Initializes a new instance of the <see cref="LoginCommandHandler"/> class.
+/// </remarks>
+/// <param name="jwtProvider">The JWT provider.</param>
+/// <param name="passwordHashChecker">The password hasher.</param>
+/// <param name="userRepository">The user repository.</param>
+public class LoginCommandHandler(
+    IJwtProvider jwtProvider,
+    IPasswordHashChecker passwordHashChecker,
+    IUserRepository userRepository)
+        : IRequestHandler<LoginCommand, Result<string>>
 {
     /// <summary>
     /// Gets or sets the user repository.
@@ -18,7 +28,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
     /// <value>
     /// The user repository.
     /// </value>
-    private readonly IUserRepository userRepository;
+    private readonly IUserRepository userRepository = userRepository;
 
     /// <summary>
     /// Gets or sets the password hasher checker.
@@ -26,7 +36,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
     /// <value>
     /// The password hasher.
     /// </value>
-    private readonly IPasswordHashChecker _passwordHashChecker;
+    private readonly IPasswordHashChecker passwordHashChecker = passwordHashChecker;
 
     /// <summary>
     /// The JWT provider
@@ -34,21 +44,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
     /// <value>
     /// The JWT provider.
     /// </value>
-    private readonly IJwtProvider jwtProvider;
+    private readonly IJwtProvider jwtProvider = jwtProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LoginCommandHandler"/> class.
-    /// </summary>
-    /// <param name="jwtProvider">The JWT provider.</param>
-    /// <param name="passwordHashChecker">The password hasher.</param>
-    /// <param name="userRepository">The user repository.</param>
-    public LoginCommandHandler(IJwtProvider jwtProvider, IPasswordHashChecker passwordHashChecker, IUserRepository userRepository)
-    {
-        this.jwtProvider = jwtProvider;
-        this._passwordHashChecker = passwordHashChecker;
-        this.userRepository = userRepository;
-    }
-
+    /// <inheritdoc/>
     public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.email);
@@ -68,7 +66,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
             return Result.Failure<string>(DomainErrors.Authentication.InvalidEmailOrPassword);
         }
 
-        bool validPassword = user.VerifyPasswordHash(password.Value, this._passwordHashChecker);
+        bool validPassword = user.VerifyPasswordHash(password.Value, this.passwordHashChecker);
 
         if (!validPassword)
         {
@@ -78,6 +76,5 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<string>>
         string token = this.jwtProvider.Create(user);
 
         return Result.Success(token);
-
     }
 }

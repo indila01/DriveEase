@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DriveEase.Persistance;
 
-public class PublishDomainEventsInterceptor(IPublisher publisher) : SaveChangesInterceptor
+/// <summary>
+///  publish domain event inceptor
+/// </summary>
+public class PublishDomainEventsInterceptor(IPublisher publisher)
+ : SaveChangesInterceptor
 {
+    /// <inheritdoc/>
     public override async ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
@@ -20,9 +25,13 @@ public class PublishDomainEventsInterceptor(IPublisher publisher) : SaveChangesI
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
 
+    /// <summary>
+    /// publish domain events async
+    /// </summary>
+    /// <param name="context">db contenxt</param>
+    /// <returns>task </returns>
     private async Task publishDomainEventsAsync(DbContext context)
     {
-
         var domainEvents = context
         .ChangeTracker
         .Entries<BaseEntity>()

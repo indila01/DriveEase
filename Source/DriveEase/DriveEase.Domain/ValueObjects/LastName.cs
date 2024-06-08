@@ -10,7 +10,6 @@ namespace DriveEase.Domain.ValueObjects;
 /// <seealso cref="DriveEase.SharedKernel.Primitives.ValueObject" />
 public sealed class LastName : ValueObject
 {
-
     /// <summary>
     /// The last name maximum length.
     /// </summary>

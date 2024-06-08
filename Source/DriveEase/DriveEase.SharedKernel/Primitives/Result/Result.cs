@@ -13,14 +13,14 @@ public class Result
     /// <exception cref="System.ArgumentException">Invalid error - error</exception>
     protected Result(bool isSuccess, Error error)
     {
-        if (isSuccess && error != Error.None ||
-            !isSuccess && error == Error.None)
+        if ((isSuccess && error != Error.None) ||
+            (!isSuccess && error == Error.None))
         {
             throw new ArgumentException("Invalid error", nameof(error));
         }
 
-        IsSuccess = isSuccess;
-        Error = error;
+        this.IsSuccess = isSuccess;
+        this.Error = error;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public class Result
     /// <summary>
     /// Gets a value indicating whether the result is a failure result.
     /// </summary>
-    public bool IsFailure => !IsSuccess;
+    public bool IsFailure => !this.IsSuccess;
 
     /// <summary>
     /// Gets the error.
@@ -52,7 +52,7 @@ public class Result
     /// <returns>A new instance of <see cref="Result{TValue}"/> with the success flag set.</returns>
     public static Result<TValue> Success<TValue>(TValue value) => new Result<TValue>(value, true, Error.None);
 
-    // <summary>
+    /// <summary>
     /// Creates a new <see cref="Result{TValue}"/> with the specified nullable value and the specified error.
     /// </summary>
     /// <typeparam name="TValue">The result type.</typeparam>
@@ -103,4 +103,3 @@ public class Result
         return Success();
     }
 }
-

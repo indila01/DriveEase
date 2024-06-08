@@ -8,23 +8,22 @@ namespace DriveEase.Application.Actions.Cars.Get;
 /// <summary>
 /// get car handler
 /// </summary>
-public class DeleteCarCommandHandler : IRequestHandler<DeleteCarCommand, Result>
+/// <remarks>
+/// Initializes a new instance of the <see cref="DeleteCarCommandHandler"/> class.
+/// </remarks>
+/// <param name="carRepository">The car repository.</param>
+public class DeleteCarCommandHandler(ICarRepository carRepository, IUnitOfWork unitOfWork)
+: IRequestHandler<DeleteCarCommand, Result>
 {
     /// <summary>
     /// The car repository
     /// </summary>
-    private readonly ICarRepository carRepository;
-    private readonly IUnitOfWork unitOfWork;
+    private readonly ICarRepository carRepository = carRepository;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DeleteCarCommandHandler"/> class.
+    /// Iunit of work
     /// </summary>
-    /// <param name="carRepository">The car repository.</param>
-    public DeleteCarCommandHandler(ICarRepository carRepository, IUnitOfWork unitOfWork)
-    {
-        this.carRepository = carRepository;
-        this.unitOfWork = unitOfWork;
-    }
+    private readonly IUnitOfWork unitOfWork = unitOfWork;
 
     /// <summary>
     /// Handles a request.

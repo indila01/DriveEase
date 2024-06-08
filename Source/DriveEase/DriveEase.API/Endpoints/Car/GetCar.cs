@@ -40,16 +40,6 @@ public class GetCar : Endpoint<GetCarRequest, IResult>
     {
         var result = await this.mediator.Send(new GetCarCommand(req.model));
 
-        //if (result is { IsSuccess: true })
-        //{
-        //    Results.Ok(result.Value);
-        //}
-
-        //if (result is { IsSuccess: false, Error: not null })
-        //{
-        //    Results.
-        //}
-
         return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails(includeErrorDetails: true);
     }
 }

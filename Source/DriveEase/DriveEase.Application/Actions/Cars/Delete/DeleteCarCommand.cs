@@ -4,6 +4,7 @@ using MediatR;
 namespace DriveEase.Application.Actions.Cars.Get;
 
 /// <summary>
-/// command 
+/// command
 /// </summary>
-public record DeleteCarCommand(Guid id) : IRequest<Result>;
+public record DeleteCarCommand(Guid id)
+: IRequest<Result>;

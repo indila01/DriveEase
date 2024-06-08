@@ -12,6 +12,6 @@ public class DeleteCarSummary : Summary<DeleteCar>
     /// </summary>
     public DeleteCarSummary()
     {
-        this.ExampleRequest = new DeleteCarRequest(new Guid());
+        this.ExampleRequest = new DeleteCarRequest(Guid.NewGuid());
     }
 }

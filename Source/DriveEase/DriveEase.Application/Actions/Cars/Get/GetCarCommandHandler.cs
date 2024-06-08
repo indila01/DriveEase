@@ -9,23 +9,17 @@ namespace DriveEase.Application.Actions.Cars.Get;
 /// get car handler
 /// </summary>
 /// <seealso cref="IRequestHandler&lt;GetCarCommand, Result&lt;CarResponse&gt;&gt;" />
-public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarResponse>>
+/// <remarks>
+/// Initializes a new instance of the <see cref="GetCarCommandHandler"/> class.
+/// </remarks>
+/// <param name="carRepository">The car repository.</param>
+public class GetCarCommandHandler(ICarRepository carRepository)
+ : IRequestHandler<GetCarCommand, Result<CarResponse>>
 {
     /// <summary>
     /// The car repository
     /// </summary>
-    private readonly ICarRepository carRepository;
-    private readonly IUnitOfWork unitOfWork;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetCarCommandHandler"/> class.
-    /// </summary>
-    /// <param name="carRepository">The car repository.</param>
-    public GetCarCommandHandler(ICarRepository carRepository, IUnitOfWork unitOfWork)
-    {
-        this.carRepository = carRepository;
-        this.unitOfWork = unitOfWork;
-    }
+    private readonly ICarRepository carRepository = carRepository;
 
     /// <summary>
     /// Handles a request.
@@ -37,7 +31,7 @@ public class GetCarCommandHandler : IRequestHandler<GetCarCommand, Result<CarRes
     /// </returns>
     public async Task<Result<CarResponse>> Handle(GetCarCommand request, CancellationToken cancellationToken)
     {
-        var result = await carRepository.GetCarByModelAsync(request.model);
+        var result = await this.carRepository.GetCarByModelAsync(request.model);
 
         if (result is null)
         {

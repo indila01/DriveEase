@@ -17,7 +17,7 @@ public abstract class Entity
     {
         Ensure.NotEmpty(id, "The identifier is required.", nameof(id));
 
-        Id = id;
+        this.Id = id;
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public abstract class Entity
     }
 
     /// <summary>
-    /// Gets or sets the entity identifier.
+    /// Gets the entity identifier.
     /// </summary>
     public Guid Id { get; private set; }
 
@@ -60,7 +60,7 @@ public abstract class Entity
             return false;
         }
 
-        return ReferenceEquals(this, other) || Id == other.Id;
+        return ReferenceEquals(this, other) || this.Id == other.Id;
     }
 
     /// <inheritdoc />
@@ -76,7 +76,7 @@ public abstract class Entity
             return true;
         }
 
-        if (obj.GetType() != GetType())
+        if (obj.GetType() != this.GetType())
         {
             return false;
         }
@@ -86,14 +86,14 @@ public abstract class Entity
             return false;
         }
 
-        if (Id == Guid.Empty || other.Id == Guid.Empty)
+        if (this.Id == Guid.Empty || other.Id == Guid.Empty)
         {
             return false;
         }
 
-        return Id == other.Id;
+        return this.Id == other.Id;
     }
 
     /// <inheritdoc />
-    public override int GetHashCode() => Id.GetHashCode() * 41;
+    public override int GetHashCode() => this.Id.GetHashCode() * 41;
 }

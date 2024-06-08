@@ -1,6 +1,5 @@
 ﻿using DriveEase.Domain.Entities;
 using DriveEase.Domain.Repositories;
-using DriveEase.SharedKernel.Util;
 using Microsoft.EntityFrameworkCore;
 
 namespace DriveEase.Persistance.EFCustomizations;
@@ -11,19 +10,13 @@ namespace DriveEase.Persistance.EFCustomizations;
 public class DriveEaseDbContext : DbContext, IUnitOfWork
 {
     /// <summary>
-    /// The date time.
-    /// </summary>
-    private readonly IDateTime dateTime;
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="DriveEaseDbContext"/> class.
     /// </summary>
     /// <param name="options">The options.</param>
     /// <param name="dateTime">The date time.</param>
-    public DriveEaseDbContext(DbContextOptions<DriveEaseDbContext> options, IDateTime dateTime)
+    public DriveEaseDbContext(DbContextOptions<DriveEaseDbContext> options)
         : base(options)
     {
-        this.dateTime = dateTime;
     }
 
     /// <summary>

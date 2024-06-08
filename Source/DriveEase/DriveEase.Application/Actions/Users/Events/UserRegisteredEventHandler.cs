@@ -3,10 +3,15 @@ using MediatR;
 
 namespace DriveEase.Application;
 
+/// <summary>
+/// user register event handler
+/// </summary>
 public class UserRegisteredEventHandler : INotificationHandler<UserRegisteredDomainEvent>
 {
-    public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
+    /// <inheritdoc/>>
+    public Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
     {
         Console.Write("event caputred");
+        return Task.CompletedTask;
     }
 }

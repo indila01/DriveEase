@@ -57,6 +57,12 @@ public class ProccessOutboxMessagesJob(
         }
     }
 
+    /// <summary>
+    /// Update outbox message as proccesses
+    /// </summary>
+    /// <param name="outboxMessage"></param>
+    /// <param name="exception"></param>
+    /// <returns></returns>
     private async Task updateOutboxMessage(OutboxMessage outboxMessage, Exception? exception)
     {
         outboxMessage.ProccessedDate = DateTime.UtcNow;

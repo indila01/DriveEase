@@ -5,7 +5,6 @@
 /// </summary>
 public interface IUnitOfWork
 {
-
     /// <summary>
     /// Saves all of the pending changes in the unit of work.
     /// </summary>

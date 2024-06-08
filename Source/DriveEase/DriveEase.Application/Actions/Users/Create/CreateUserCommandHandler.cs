@@ -12,7 +12,16 @@ namespace DriveEase.Application.Actions.Users.Create;
 /// create user command handler
 /// </summary>
 /// <seealso cref="MediatR.IRequestHandler&lt;DriveEase.Application.Actions.Users.Create.CreateUserCommand, DriveEase.SharedKernel.Primitives.Result.Result&lt;System.Guid&gt;&gt;" />
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<string>>
+/// <remarks>
+/// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
+/// </remarks>
+/// <param name="userRepository">The user repository.</param>
+public class CreateUserCommandHandler(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IUnitOfWork unitOfWork,
+    IJwtProvider jwtProvider)
+     : IRequestHandler<CreateUserCommand, Result<string>>
 {
     /// <summary>
     /// Gets or sets the Iunit of work.
@@ -20,7 +29,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// Iunit of work.
     /// </value>
-    private readonly IUnitOfWork unitOfWork;
+    private readonly IUnitOfWork unitOfWork = unitOfWork;
 
     /// <summary>
     /// Gets or sets the user repository.
@@ -28,7 +37,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// The user repository.
     /// </value>
-    private readonly IUserRepository userRepository;
+    private readonly IUserRepository userRepository = userRepository;
 
     /// <summary>
     /// Gets or sets the password hasher.
@@ -36,7 +45,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// The password hasher.
     /// </value>
-    private readonly IPasswordHasher passwordHasher;
+    private readonly IPasswordHasher passwordHasher = passwordHasher;
 
     /// <summary>
     /// The JWT provider
@@ -44,24 +53,9 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
     /// <value>
     /// The JWT provider.
     /// </value>
-    private readonly IJwtProvider jwtProvider;
+    private readonly IJwtProvider jwtProvider = jwtProvider;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CreateUserCommandHandler"/> class.
-    /// </summary>
-    /// <param name="userRepository">The user repository.</param>
-    public CreateUserCommandHandler(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        IUnitOfWork unitOfWork,
-        IJwtProvider jwtProvider)
-    {
-        this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
-        this.unitOfWork = unitOfWork;
-        this.jwtProvider = jwtProvider;
-    }
-
+    /// <inheritdoc/>
     public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var email = Email.Create(request.email);
@@ -90,6 +84,5 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         string token = this.jwtProvider.Create(user);
 
         return Result.Success(token);
-
     }
 }

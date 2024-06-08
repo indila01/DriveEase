@@ -16,6 +16,5 @@ public class GetCarValidator : Validator<GetCarRequest>
         this.RuleFor(x => x.model)
             .NotEmpty().WithMessage("Model name is required")
             .MinimumLength(3).WithMessage("Model name is too short");
-
     }
 }

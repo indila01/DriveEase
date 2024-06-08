@@ -60,8 +60,6 @@ public static class DependencyInjection
     {
         services.AddQuartz(o =>
       {
-          o.UseMicrosoftDependencyInjectionJobFactory();
-
           var jobKey = JobKey.Create(nameof(LoggingBackgroundJob));
 
           o.AddJob<ProccessOutboxMessagesJob>(jobKey)

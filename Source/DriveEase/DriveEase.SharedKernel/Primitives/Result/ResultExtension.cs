@@ -1,4 +1,5 @@
 ﻿namespace DriveEase.SharedKernel.Primitives.Result;
+
 /// <summary>
 /// Contains extension methods for the result class.
 /// </summary>

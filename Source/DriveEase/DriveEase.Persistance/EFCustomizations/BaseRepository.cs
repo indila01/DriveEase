@@ -8,6 +8,9 @@ namespace DriveEase.Persistance.EFCustomizations;
 public class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : BaseEntity
 {
+    /// <summary>
+    /// db context
+    /// </summary>
     protected readonly DriveEaseDbContext dbContext;
 
     /// <summary>
