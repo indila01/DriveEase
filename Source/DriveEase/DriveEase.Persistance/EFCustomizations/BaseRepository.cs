@@ -8,6 +8,9 @@ namespace DriveEase.Persistance.EFCustomizations;
 public class BaseRepository<TEntity> : IBaseRepository<TEntity>
     where TEntity : BaseEntity
 {
+    /// <summary>
+    /// db context
+    /// </summary>
     protected readonly DriveEaseDbContext dbContext;
 
     /// <summary>
@@ -38,4 +41,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
     /// <inheritdoc/>
     public void AddRange(IList<TEntity> entities)
      => this.dbContext.Set<TEntity>().AddRange(entities);
+
+    /// <inheritdoc/>
+    public void Remove(TEntity entity)
+     => this.dbContext.Remove(entity);
 }

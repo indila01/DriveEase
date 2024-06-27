@@ -23,7 +23,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     public static bool operator !=(ValueObject a, ValueObject b) => !(a == b);
 
     /// <inheritdoc />
-    public bool Equals(ValueObject other) => !(other is null) && GetAtomicValues().SequenceEqual(other.GetAtomicValues());
+    public bool Equals(ValueObject other) => !(other is null) && this.GetAtomicValues().SequenceEqual(other.GetAtomicValues());
 
     /// <inheritdoc />
     public override bool Equals(object obj)
@@ -33,7 +33,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
             return false;
         }
 
-        if (GetType() != obj.GetType())
+        if (this.GetType() != obj.GetType())
         {
             return false;
         }
@@ -43,7 +43,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
             return false;
         }
 
-        return GetAtomicValues().SequenceEqual(valueObject.GetAtomicValues());
+        return this.GetAtomicValues().SequenceEqual(valueObject.GetAtomicValues());
     }
 
     /// <inheritdoc />
@@ -51,7 +51,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         HashCode hashCode = default;
 
-        foreach (object obj in GetAtomicValues())
+        foreach (object obj in this.GetAtomicValues())
         {
             hashCode.Add(obj);
         }

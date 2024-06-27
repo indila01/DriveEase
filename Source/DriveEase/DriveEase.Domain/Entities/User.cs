@@ -10,7 +10,10 @@ namespace DriveEase.Domain.Entities;
 /// <seealso cref="DriveEase.Domain.Entities.BaseEntity" />
 public class User : BaseEntity, IAuditableEntity, ISoftDeletableEntity
 {
-    private string passwordHash;
+    /// <summary>
+    /// password hash
+    /// </summary>
+    private readonly string passwordHash;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="User"/> class.
@@ -56,7 +59,7 @@ public class User : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// <summary>
     /// Gets the user full name.
     /// </summary>
-    public string FullName => $"{FirstName} {LastName}";
+    public string FullName => $"{this.FirstName} {this.LastName}";
 
     /// <summary>
     /// Gets the user email.
@@ -85,6 +88,17 @@ public class User : BaseEntity, IAuditableEntity, ISoftDeletableEntity
     /// <returns>The newly created user instance.</returns>
     public static User Create(FirstName firstName, LastName lastName, Email email, string passwordHash)
     {
-        return new User(firstName, lastName, email, passwordHash);
+        var user = new User(firstName, lastName, email, passwordHash);
+        user.RaiseDomainEvent(new UserRegisteredDomainEvent(user.Id));
+        return user;
     }
+
+    /// <summary>
+    /// Verifies that the provided password hash matches the password hash.
+    /// </summary>
+    /// <param name="password">The password to be checked against the user password hash.</param>
+    /// <param name="passwordHashChecker">The password hash checker.</param>
+    /// <returns>True if the password hashes match, otherwise false.</returns>
+    public bool VerifyPasswordHash(string password, IPasswordHashChecker passwordHashChecker)
+        => !string.IsNullOrWhiteSpace(password) && passwordHashChecker.HashesMatch(this.passwordHash, password);
 }

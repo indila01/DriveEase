@@ -1,4 +1,6 @@
-﻿namespace DriveEase.Domain.Abstraction;
+﻿using DriveEase.Domain.ValueObjects;
+
+namespace DriveEase.Domain.Abstraction;
 
 /// <summary>
 /// password hasher interface.
@@ -10,5 +12,5 @@ public interface IPasswordHasher
     /// </summary>
     /// <param name="password">The password.</param>
     /// <returns>password hash</returns>
-    string HashPassword(string password);
+    string HashPassword(Password password);
 }

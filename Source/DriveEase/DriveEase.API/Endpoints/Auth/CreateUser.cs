@@ -15,7 +15,6 @@ namespace DriveEase.API.Endpoints.Auth;
 public class CreateUser
     : Endpoint<CreateUserRequest, IResult>
 {
-
     /// <summary>
     /// The mediator
     /// </summary>

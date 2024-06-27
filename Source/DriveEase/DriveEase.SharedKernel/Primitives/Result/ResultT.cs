@@ -1,7 +1,12 @@
 ﻿namespace DriveEase.SharedKernel.Primitives.Result;
+
+/// <summary>
+/// result class
+/// </summary>
+/// <typeparam name="TValue">type</typeparam>
 public class Result<TValue> : Result
 {
-    private readonly TValue _value;
+    private readonly TValue value;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Result{TValueType}"/> class with the specified parameters.
@@ -11,7 +16,7 @@ public class Result<TValue> : Result
     /// <param name="error">The error.</param>
     protected internal Result(TValue value, bool isSuccess, Error error)
         : base(isSuccess, error)
-        => _value = value;
+        => this.value = value;
 
     public static implicit operator Result<TValue>(TValue value) => Success(value);
 
@@ -20,7 +25,7 @@ public class Result<TValue> : Result
     /// </summary>
     /// <returns>The result value if the result is successful.</returns>
     /// <exception cref="InvalidOperationException"> when <see cref="Result.IsFailure"/> is true.</exception>
-    public TValue Value => IsSuccess
-        ? _value
+    public TValue Value => this.IsSuccess
+        ? this.value
         : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 }

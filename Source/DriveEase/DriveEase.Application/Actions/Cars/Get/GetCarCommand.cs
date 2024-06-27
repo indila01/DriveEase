@@ -4,6 +4,7 @@ using MediatR;
 namespace DriveEase.Application.Actions.Cars.Get;
 
 /// <summary>
-/// command 
+/// command
 /// </summary>
-public record GetCarCommand(string model) : IRequest<Result<CarResponse>>;
+public record GetCarCommand(string model)
+: IRequest<Result<CarResponse>>;

@@ -7,4 +7,5 @@ namespace DriveEase.Application.Actions.Users.Get;
 /// user command
 /// </summary>
 /// <seealso cref="IRequest&lt;Result&lt;UserDto&gt;&gt;" />
-public record GetUserCommand(string username) : IRequest<Result<UserDto>>;
+public record GetUserCommand(string username)
+ : IRequest<Result<UserDto>>;

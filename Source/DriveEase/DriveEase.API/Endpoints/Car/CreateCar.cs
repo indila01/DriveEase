@@ -44,8 +44,7 @@ public class CreateCar
         this.Description(x => x
             .Accepts<CreateCarRequest>(MediaTypeNames.Application.Json)
             .Produces<Guid>(201, MediaTypeNames.Application.Json)
-            .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json)
-        );
+            .Produces<CustomProblemDetails>(400, MediaTypeNames.Application.Json));
     }
 
     /// <summary>

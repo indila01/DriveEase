@@ -7,13 +7,10 @@ using DriveEase.SharedKernel;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +19,6 @@ var config = builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
-    //.AddAzureAppConfiguration(x =>
-    //{
-    //    x.Connect("asd");
-    //    x.ConfigureKeyVault();
-    //})
     .AddUserSecrets<Program>(optional: true)
     .Build();
 
@@ -39,29 +31,14 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 // register services for each layer
 builder.Services.RegisterPersistenceServices(config);
 builder.Services.RegisterApplicationServices();
-builder.Services.RegisterInfrastructureServices();
+builder.Services.RegisterInfrastructureServices(config);
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(o =>
-    {
-        o.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = config["Jwt:Issuer"],
-            ValidAudience = config["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]))
-        };
-    });
-
 builder.Services.
     AddFastEndpoints()
-    .SwaggerDocument();
+    .SwaggerDocument(x => x.AutoTagPathSegmentIndex = 2);
 
 // options pattern
 builder.Services.Configure<ApplicationConfig>(
@@ -71,10 +48,11 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection(nameof(JwtSettings)));
 
 builder.Services
-    .AddHealthChecksUI(options
-    => options
-        .AddHealthCheckEndpoint("HealthCheck API", "/healthcheck"))
-    .AddInMemoryStorage();
+    .AddHealthChecksUI(options =>
+    {
+        options.AddHealthCheckEndpoint("HealthCheck API", "/healthcheck");
+        options.SetEvaluationTimeInSeconds(600);
+    }).AddInMemoryStorage();
 
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<DriveEaseDbContext>()
@@ -85,9 +63,6 @@ builder.Services.Add(ServiceDescriptor.Singleton(typeof(IOptionsSnapshot<>), typ
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-//builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 var app = builder.Build();
 

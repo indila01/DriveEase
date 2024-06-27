@@ -33,4 +33,10 @@ public interface IBaseRepository<TEntity>
     /// </summary>
     /// <param name="entities">The entities.</param>
     void AddRange(IList<TEntity> entities);
+
+    /// <summary>
+    /// Removes the entity.
+    /// </summary>
+    /// <param name="entity">The entities.</param>
+    void Remove(TEntity entity);
 }
